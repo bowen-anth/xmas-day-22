@@ -1,4 +1,4 @@
-let people = []
+let people = getPeopleFromLocalStorage() || []
 
 const inputFieldEl = document.getElementById("input-field")
 const addButtonEl = document.getElementById("add-button")
@@ -10,6 +10,8 @@ addButtonEl.addEventListener("click", function() {
     if (inputValue) {
         people.push(inputValue)
         
+        savePeopleToLocalStorage(people);
+
         clearInputFieldEl()
         
         renderList(people)
@@ -44,9 +46,20 @@ function appendPersonToPeopleListEl(person) {
         let index = people.indexOf(person)
 
         people.splice(index, 1)
+
+        savePeopleToLocalStorage(people)
             
         renderList(people)
     })
     
     peopleListEl.append(newEl)
+}
+
+function savePeopleToLocalStorage(peopleArray) {
+    localStorage.setItem("people", JSON.stringify(peopleArray))
+}
+
+function getPeopleFromLocalStorage() {
+    const storedPeople = localStorage.getItem("people")
+    return storedPeople ? JSON.parse(storedPeople) : null
 }
